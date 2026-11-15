@@ -93,10 +93,14 @@ export function wrapRecord(
   responseFormat: ResponseFormat,
   title: string
 ): { output: ToolOutput; markdown: string; responseFormat: ResponseFormat } {
-  const output = (data && typeof data === "object" ? data : { result: data }) as ToolOutput;
+  // MCP structuredContent must be an object. WMS returns an array for
+  // negative stock adjustments, even after the warehouse write succeeds.
+  const output = (data && typeof data === "object" && !Array.isArray(data)
+    ? data
+    : { result: data }) as ToolOutput;
   return {
     output,
-    markdown: toMarkdown(output, title),
+    markdown: toMarkdown(Array.isArray(data) ? data : output, title),
     responseFormat
   };
 }
