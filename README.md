@@ -151,6 +151,7 @@ Maintainer-only dev files: the `.agents/` directory holds local Cursor/agent ski
 - Use `quantityAvailable` for stock decisions, not only `quantityOnHand`. Product inventory rows also include nullable `safetyStock` (the Shopify buffer). It is reported separately and does not reduce `quantityAvailable`. Location rows include `quantityMovable`, which also does not change `quantityAvailable`.
 - Product updates can set `safetyStock`. `commerceWritebackDisabledByProvider` changes writeback for every store of one provider. `commerceWritebackDisabledByLinkId` changes one `productCommerceLinks` connection by its id.
 - Writes have **no idempotency keys**. Re-read before retrying. `409` means warehouse state changed.
+- Array responses (including negative stock adjustments) are wrapped as `{ "result": [...] }` in MCP structured content. Object responses remain unchanged.
 - Receiving can return HTTP 200 with `"success": false`. That is treated as a tool error.
 - Pause and resume jobs only through the dedicated tools, not `starshipit_wms_update_job`.
 - Responses over 25,000 characters are truncated with a paging hint.
